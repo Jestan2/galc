@@ -289,7 +289,7 @@ function TaskCategories() {
                 href={BOOKING_URL}
                 className="w-full sm:w-auto flex justify-center sm:justify-start rounded-full bg-slate-900 text-white px-6 py-3 text-base font-semibold hover:bg-slate-800 transition inline-flex items-center gap-1.5"
               >
-                This is my job
+                Book
                 <span aria-hidden="true">→</span>
               </a>
 
