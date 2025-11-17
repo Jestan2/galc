@@ -16,6 +16,8 @@ import clpPeople3 from "./assets/clppeople3.webp";
 
 import { motion, AnimatePresence } from "framer-motion";
 
+import { Analytics } from "@vercel/analytics/react";
+
 // react icons
 import {
   FiTruck, // moving
@@ -70,6 +72,7 @@ export default function App() {
       <TrustSectionRail />
       <FinalCTA />
       <SiteFooter />
+      <Analytics />
     </div>
   );
 }
