@@ -1,20 +1,21 @@
 // App.jsx
 import React from "react";
-import galcLogo from "./assets/Logo30.png";
+import galcLogo from "./assets/Logo40.png";
 
 // images
 import movingImg from "./assets/moving.webp";
-import cleanImg from "./assets/clean.webp";
+import cleanImg from "./assets/warehouse.webp";
 import outdoorImg from "./assets/outdoor.webp";
 import propertyImg from "./assets/property.webp";
 import somethingImg from "./assets/something.webp";
-import howImg from "./assets/55000.webp";
-
+import movingProcessImg from "./assets/movingprocess.webp";
+import warehouseingProcessImg from "./assets/warehousingprocess.webp";
+import eventImg from "./assets/event.webp";
 import clpPeople1 from "./assets/clppeople.webp";
 import clpPeople2 from "./assets/clppeople2.webp";
 import clpPeople3 from "./assets/clppeople3.webp";
-
-import { motion, AnimatePresence } from "framer-motion";
+import calendarAIImg from "./assets/calAI.webp";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
 
 import { Routes, Route, Link, Navigate } from "react-router-dom";
@@ -27,6 +28,7 @@ import {
   FiTrash2,
   FiSun,
   FiHome,
+  FiCalendar,
   FiHelpCircle,
   FiEdit3,
   FiUsers,
@@ -34,15 +36,16 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 
-const BOOKING_URL = "https://booking.communitylaborpartnership.com/";
+const BOOKING_URL = "https://book.greatamericanlabor.com/";
 const PHONE_DISPLAY = "(888) 270-8355";
 const PHONE_TEL = "+18882708355";
 
 /* -------------------- Vertical rhythm (Apple x Uber) -------------------- */
 const RHYTHM = {
   hero: "pt-14 sm:pt-20 lg:pt-24 2xl:pt-28 pb-12 sm:pb-16 lg:pb-20 2xl:pb-24",
-  section: "py-16 sm:py-20 lg:py-24 2xl:py-28",
+  section: "py-14 sm:py-16 lg:py-18 2xl:py-20",
   sectionTight: "py-14 sm:py-16 lg:py-20 2xl:py-24",
+  sectionStack: "pt-0 pb-16 sm:pb-20 lg:pb-24 2xl:pb-28",
   headerMB: "mb-10 sm:mb-12 lg:mb-14",
   footer: "py-10 sm:py-12",
 };
@@ -221,8 +224,9 @@ export default function App() {
               <Hero />
               <StatBelt />
               <TaskCategories />
-              <HowItWorksChat />
+              <WhyUs />
               <TrustSectionRail />
+              <HowItWorksChat />
               <FinalCTA />
             </>
           }
@@ -265,7 +269,7 @@ function TopBar() {
               href={BOOKING_URL}
               className="shrink-0 text-base sm:text-lg px-6 sm:px-8 lg:px-9 py-3 sm:py-3.5"
             >
-              Find workers
+              For Businesses
             </PrimaryButton>
           </div>
         </div>
@@ -295,7 +299,7 @@ function Hero() {
           </p>
 
           <p className="mt-4 mx-auto max-w-3xl leading-relaxed text-slate-700 text-[clamp(1rem,1.2vw,1.35rem)]">
-            Moving, cleaning, rearranging, outdoor work—tell us the details and we’ll send a crew.
+            Moving, cleaning, rearranging, outdoor work, tell us the details and we’ll send a crew.
             Our tech finds the right vetted workers and keeps you updated.
           </p>
 
@@ -357,7 +361,7 @@ function TaskCategories() {
       id: "moving",
       title: "Moving & lifting",
       subtitle: "Load/unload trucks, PODs, or storage units",
-      desc: "You bring the vehicle — we send strong, reliable workers who can carry the heavy stuff and follow directions.",
+      desc: "You bring the vehicle, we send strong, reliable workers who can carry the heavy stuff and follow directions.",
       badge: "Most booked",
       image: movingImg,
       chips: ["Flex crew size", "Apartments / homes", "Same-day booking"],
@@ -365,8 +369,8 @@ function TaskCategories() {
     {
       id: "cleanout",
       title: "Clean out a space",
-      subtitle: "Garages, basements, sheds",
-      desc: "Tell us what stays and what goes — workers do the carrying, bagging, and moving so you don’t have to.",
+      subtitle: "Warehouses, Garages, basements,",
+      desc: "Tell us what stays and what goes, workers do the carrying, bagging, and moving so you don’t have to.",
       image: cleanImg,
       chips: ["Sort + haul", "You point, they move", "Indoor / outdoor"],
     },
@@ -374,7 +378,7 @@ function TaskCategories() {
       id: "outdoor",
       title: "Outdoor & yard jobs",
       subtitle: "Raking, bagging, hauling branches",
-      desc: "You’ve got the tools or materials — we send labor to rake, bag, move soil, or help with exterior jobs.",
+      desc: "You’ve got the tools or materials, we send labor to rake, bag, move soil, or help with exterior jobs.",
       image: outdoorImg,
       chips: ["Heavy yard work", "Seasonal cleanups", "Crew format"],
     },
@@ -382,9 +386,17 @@ function TaskCategories() {
       id: "property",
       title: "Property & turnover work",
       subtitle: "Unit prep, furniture moves, junk removal",
-      desc: "Pick the day and time — we send workers to help turn units, move furniture, or remove junk for landlords and small operators.",
+      desc: "Pick the day and time, we send workers to help turn units, move furniture, or remove junk for landlords and small operators.",
       image: propertyImg,
       chips: ["Landlords", "Small biz", "Repeat jobs"],
+    },
+    {
+      id: "events",
+      title: "Events",
+      subtitle: "Setup, staging & tear down",
+      desc: "Need extra hands for an event? We can send a crew to set up tables, chairs, staging, and help with tear down after.",
+      image: eventImg,
+      chips: ["Setup + teardown", "Tables / chairs", "Fast crew"],
     },
     {
       id: "other",
@@ -401,6 +413,7 @@ function TaskCategories() {
     cleanout: FiTrash2,
     outdoor: FiSun,
     property: FiHome,
+    events: FiCalendar,
     other: FiHelpCircle,
   };
 
@@ -467,7 +480,7 @@ function TaskCategories() {
               </PrimaryButton>
 
               <p className="text-xs text-slate-500 pt-1">
-                Labor-only service — you provide any trucks, tools, or materials.
+                Labor-only service, you provide any trucks, tools, or materials.
               </p>
             </div>
           </div>
@@ -549,6 +562,17 @@ function HowItWorksChat() {
   const stepsRef = React.useRef(null);
   const [stepsH, setStepsH] = React.useState("auto");
 
+  // Parallax for the process imagery
+  const artRef = React.useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: artRef,
+    offset: ["start end", "end start"],
+  });
+
+  // subtle, premium movement
+  const yA = useTransform(scrollYProgress, [0, 1], [18, -18]);
+  const yB = useTransform(scrollYProgress, [0, 1], [-12, 12]);
+
   React.useLayoutEffect(() => {
     const el = stepsRef.current;
     if (!el) return;
@@ -591,16 +615,17 @@ function HowItWorksChat() {
             {HOW_STEPS.map((step) => {
               const Icon = step.icon;
               return (
-                <div
-                  key={step.id}
-                  className={[
-                    "group w-full flex items-start sm:items-center gap-4 rounded-2xl border transition",
-                    "py-5 sm:py-6 px-5 sm:px-6",
-                    "border-slate-200/60 bg-slate-50/50 hover:border-slate-300 hover:bg-white",
-                    "shadow-[0_16px_45px_rgba(15,23,42,0.04)]",
-                  ].join(" ")}
-                >
-                  <div className="h-10 sm:h-12 w-1 rounded-full bg-slate-200 group-hover:bg-slate-300 transition" />
+                  <div
+                    key={step.id}
+                    className={[
+                      "w-full flex items-start sm:items-center gap-4 rounded-2xl border",
+                      "py-5 sm:py-6 px-5 sm:px-6",
+                      "border-slate-200/60 bg-white",
+                      "shadow-[0_10px_28px_rgba(15,23,42,0.03)]",
+                      "cursor-default",
+                    ].join(" ")}
+                  >
+                  <div className="h-10 sm:h-12 w-1 rounded-full bg-slate-200" />
 
                   <div className="h-11 w-11 rounded-2xl bg-white border border-slate-200/70 flex items-center justify-center shrink-0">
                     <Icon className="text-rose-600" size={18} />
@@ -617,28 +642,56 @@ function HowItWorksChat() {
                       {step.desc}
                     </p>
                   </div>
-
-                  <span className="text-sm text-slate-300 group-hover:text-slate-400 transition">
-                    →
-                  </span>
                 </div>
               );
             })}
           </div>
 
-          {/* Right: raw image — height locked to steps on lg+ */}
+          {/* Right: dual process images (diagonal + parallax) — height locked to steps on lg+ */}
           <div
             className="w-full max-w-[520px] mx-auto lg:mx-0 lg:w-[min(42vw,600px)] lg:h-[var(--steps-h)] shrink-0"
             style={{ "--steps-h": stepsH }}
           >
-            <img
-              src={howImg}
-              alt="Confirmed workers"
-              className="w-full h-auto lg:h-full object-contain"
-              loading="lazy"
-              decoding="async"
-              fetchPriority="low"
-            />
+            <div
+              ref={artRef}
+              className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:h-full"
+            >
+              {/* Top-left card */}
+              <motion.div
+                style={{ y: yA }}
+                className="absolute left-0 top-3 sm:top-5 w-[78%] sm:w-[72%] h-[66%] rotate-[-4deg] transform-gpu
+                           overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200/70
+                           shadow-[0_28px_90px_rgba(15,23,42,0.16)]"
+              >
+                <img
+                  src={movingProcessImg}
+                  alt="Moving process"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/15 via-transparent to-transparent" />
+              </motion.div>
+
+              {/* Bottom-right card */}
+              <motion.div
+                style={{ y: yB }}
+                className="absolute right-0 bottom-3 sm:bottom-5 w-[70%] sm:w-[64%] h-[60%] rotate-[4deg] transform-gpu
+                           overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200/70
+                           shadow-[0_28px_90px_rgba(15,23,42,0.16)]"
+              >
+                <img
+                  src={warehouseingProcessImg}
+                  alt="Warehousing process"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/15 via-transparent to-transparent" />
+              </motion.div>
+            </div>
           </div>
         </div>
       </Container>
@@ -756,6 +809,111 @@ function TrustSectionRail() {
     </section>
   );
 }
+/* -------------------- Why us (clean, site-consistent) -------------------- */
+function WhyUs() {
+  return (
+    <section className={`bg-white ${RHYTHM.section}`}>
+      <Container>
+        {/* centered header */}
+        <header className={`text-center max-w-3xl mx-auto ${RHYTHM.headerMB}`}>
+          <h2 className="font-bold tracking-tight text-slate-900 text-[clamp(1.9rem,3vw,3.4rem)]">
+            Why <span className="text-rose-600">Us</span>
+          </h2>
+          <p className="mt-4 text-slate-700 text-[clamp(1rem,1.2vw,1.25rem)]">
+            We combine a nationwide worker network with modern automation to fill jobs fast, handle edge cases, and keep
+            everything organized from booking to completion.
+          </p>
+        </header>
+
+        {/* main block */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 2xl:gap-14 items-stretch">
+          {/* left: big visual (NO on-load animation) */}
+          <div className="lg:col-span-7 overflow-hidden rounded-3xl border border-slate-200/60 bg-white shadow-[0_22px_70px_rgba(15,23,42,0.10)]">
+            {/* prevents “white bar” on desktop when the column stretches */}
+            <div className="relative w-full aspect-[16/10] lg:aspect-auto lg:h-full">
+              <img
+                src={calendarAIImg}
+                alt="Calendar AI scheduling dashboard"
+                className="absolute inset-0 h-full w-full object-cover object-top"
+                loading="lazy"
+                decoding="async"
+                fetchPriority="low"
+              />
+
+              {/* crisp edge (very subtle) */}
+              <div className="pointer-events-none absolute inset-0 ring-1 ring-black/5" />
+
+              {/* chips */}
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                <div className="flex flex-wrap gap-2">
+                  <span className="rounded-full bg-white/90 backdrop-blur border border-slate-200/70 px-3.5 py-1.5 text-xs text-slate-700 shadow-sm">
+                    30,000+ workers
+                  </span>
+
+                  <span className="rounded-full bg-white/90 backdrop-blur border border-slate-200/70 px-3.5 py-1.5 text-xs text-slate-700 shadow-sm">
+                    AI dispatching
+                  </span>
+
+                  {/* Hide on phone, show on sm+ */}
+                  <span className="hidden sm:inline-flex rounded-full bg-white/90 backdrop-blur border border-slate-200/70 px-3.5 py-1.5 text-xs text-slate-700 shadow-sm">
+                    Fastest fills
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* right: editorial copy (NO on-load animation) */}
+          <div className="lg:col-span-5">
+            <div className="h-full flex flex-col justify-between">
+              <div className="space-y-6">
+                <div className="pt-1">
+                  <h3 className="mt-3 font-bold text-slate-900 leading-tight text-[clamp(1.25rem,1.6vw,2.05rem)]">
+                    A smarter labor platform
+                  </h3>
+                </div>
+
+                <div className="space-y-5">
+                  <div className="border-l-2 border-slate-200 pl-4">
+                    <p className="font-semibold text-slate-900">Fast fills, better placements</p>
+                    <p className="mt-1 text-slate-600 leading-relaxed">
+                      AI matching focuses on timing and job fit so you get the right crew everytime.
+                    </p>
+                  </div>
+
+                  <div className="border-l-2 border-slate-200 pl-4">
+                    <p className="font-semibold text-slate-900">No-show handling & rapid backfill</p>
+                    <p className="mt-1 text-slate-600 leading-relaxed">
+                      Automated reminders reduce misses. If anything happens, we can rush out replacements within minutes.
+                    </p>
+                  </div>
+
+                  <div className="border-l-2 border-slate-200 pl-4">
+                    <p className="font-semibold text-slate-900">Operations built-in</p>
+                    <p className="mt-1 text-slate-600 leading-relaxed">
+                      AI concierge booking, schedules, and invoice tracking — built for repeat business.
+                    </p>
+                  </div>
+
+                  <div className="border-l-2 border-slate-200 pl-4">
+                    <p className="font-semibold text-slate-900">24/7 support & smooth completion</p>
+                    <p className="mt-1 text-slate-600 leading-relaxed">
+                      Support anytime, we keep the job on track from arrival to completion.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA row (kept empty like your current code) */}
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center" />
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
 
 /* -------------------- Final CTA (solid like stats) -------------------- */
 function FinalCTA() {
