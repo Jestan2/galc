@@ -857,7 +857,7 @@ function WhyUs() {
               <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
                 <div className="flex flex-wrap gap-2">
                   <span className="rounded-full bg-white/90 backdrop-blur border border-slate-200/70 px-3.5 py-1.5 text-xs text-slate-700 shadow-sm">
-                    30,000+ workers
+                    90,000+ workers
                   </span>
 
                   <span className="rounded-full bg-white/90 backdrop-blur border border-slate-200/70 px-3.5 py-1.5 text-xs text-slate-700 shadow-sm">
