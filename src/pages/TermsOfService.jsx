@@ -221,10 +221,6 @@ export default function TermsOfService() {
             </div>
           </div>
         </div>
-
-        <p className="mt-6 text-xs text-slate-500">
-          This page is provided for convenience and does not constitute legal advice.
-        </p>
       </Container>
     </div>
   );
