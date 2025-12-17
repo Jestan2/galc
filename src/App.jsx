@@ -42,12 +42,17 @@ const PHONE_TEL = "+18882708355";
 
 /* -------------------- Vertical rhythm (Apple x Uber) -------------------- */
 const RHYTHM = {
-  hero: "pt-14 sm:pt-20 lg:pt-24 2xl:pt-28 pb-12 sm:pb-16 lg:pb-20 2xl:pb-24",
-  section: "py-14 sm:py-16 lg:py-18 2xl:py-20",
+  hero: "pt-16 sm:pt-22 lg:pt-26 2xl:pt-30 pb-14 sm:pb-18 lg:pb-22 2xl:pb-28",
+  section: "py-16 sm:py-20 lg:py-24 2xl:py-28",
   sectionTight: "py-14 sm:py-16 lg:py-20 2xl:py-24",
-  sectionStack: "pt-0 pb-16 sm:pb-20 lg:pb-24 2xl:pb-28",
   headerMB: "mb-10 sm:mb-12 lg:mb-14",
   footer: "py-10 sm:py-12",
+
+  // Split padding helpers to avoid “double” spacing between back-to-back sections
+  sectionPT: "pt-16 sm:pt-20 lg:pt-24 2xl:pt-28",
+  sectionPB: "pb-16 sm:pb-20 lg:pb-24 2xl:pb-28",
+  sectionHalfPT: "pt-10 sm:pt-12 lg:pt-14 2xl:pt-16",
+  sectionHalfPB: "pb-10 sm:pb-12 lg:pb-14 2xl:pb-16",
 };
 
 const HOW_STEPS = [
@@ -421,7 +426,8 @@ function TaskCategories() {
   const previewRef = React.useRef(null);
 
   return (
-    <section className={`bg-white ${RHYTHM.section}`}>
+    // Full top padding (as before) + half bottom padding to prevent double spacing into the next section
+    <section className={`bg-white ${RHYTHM.sectionPT} ${RHYTHM.sectionHalfPB}`}>
       <Container>
         <header className={`max-w-3xl ${RHYTHM.headerMB}`}>
           <h2 className="font-bold tracking-tight text-slate-900 text-[clamp(1.9rem,3vw,3.4rem)]">
@@ -598,7 +604,8 @@ function HowItWorksChat() {
   }, []);
 
   return (
-    <section className={`bg-white ${RHYTHM.section}`}>
+    // Half top + half bottom so it splits spacing with the grey section above and dark CTA below
+    <section className={`bg-white ${RHYTHM.sectionHalfPT} ${RHYTHM.sectionHalfPB}`}>
       <Container>
         <header className={`max-w-3xl ${RHYTHM.headerMB}`}>
           <h2 className="font-bold tracking-tight text-slate-900 text-[clamp(1.9rem,3vw,3.4rem)]">
@@ -615,16 +622,16 @@ function HowItWorksChat() {
             {HOW_STEPS.map((step) => {
               const Icon = step.icon;
               return (
-                  <div
-                    key={step.id}
-                    className={[
-                      "w-full flex items-start sm:items-center gap-4 rounded-2xl border",
-                      "py-5 sm:py-6 px-5 sm:px-6",
-                      "border-slate-200/60 bg-white",
-                      "shadow-[0_10px_28px_rgba(15,23,42,0.03)]",
-                      "cursor-default",
-                    ].join(" ")}
-                  >
+                <div
+                  key={step.id}
+                  className={[
+                    "w-full flex items-start sm:items-center gap-4 rounded-2xl border",
+                    "py-5 sm:py-6 px-5 sm:px-6",
+                    "border-slate-200/60 bg-white",
+                    "shadow-[0_10px_28px_rgba(15,23,42,0.03)]",
+                    "cursor-default",
+                  ].join(" ")}
+                >
                   <div className="h-10 sm:h-12 w-1 rounded-full bg-slate-200" />
 
                   <div className="h-11 w-11 rounded-2xl bg-white border border-slate-200/70 flex items-center justify-center shrink-0">
@@ -729,7 +736,8 @@ function TrustSectionRail() {
   }, [total]);
 
   return (
-    <section className={`bg-slate-50 ${RHYTHM.section}`}>
+    // Half top + half bottom so the white/grey boundaries split evenly
+    <section className={`bg-slate-50 ${RHYTHM.sectionHalfPT} ${RHYTHM.sectionHalfPB}`}>
       <Container>
         <div className={`text-center max-w-3xl mx-auto ${RHYTHM.headerMB}`}>
           <h2 className="font-bold tracking-tight text-slate-900 text-[clamp(1.9rem,3vw,3.4rem)]">
@@ -809,10 +817,12 @@ function TrustSectionRail() {
     </section>
   );
 }
+
 /* -------------------- Why us (clean, site-consistent) -------------------- */
 function WhyUs() {
   return (
-    <section className={`bg-white ${RHYTHM.section}`}>
+    // Half top + half bottom so it splits spacing evenly with the sections above/below
+    <section className={`bg-white ${RHYTHM.sectionHalfPT} ${RHYTHM.sectionHalfPB}`}>
       <Container>
         {/* centered header */}
         <header className={`text-center max-w-3xl mx-auto ${RHYTHM.headerMB}`}>
@@ -914,7 +924,6 @@ function WhyUs() {
   );
 }
 
-
 /* -------------------- Final CTA (solid like stats) -------------------- */
 function FinalCTA() {
   return (
@@ -923,7 +932,8 @@ function FinalCTA() {
         className="pointer-events-none absolute inset-0
         bg-[radial-gradient(circle_at_center,rgba(72,160,255,0.16),rgba(15,23,42,0)_70%)]"
       />
-      <Container className={`relative ${RHYTHM.section}`}>
+      {/* Half top padding to avoid doubling with the section above; keep full bottom padding */}
+      <Container className={`relative ${RHYTHM.sectionHalfPT} ${RHYTHM.sectionPB}`}>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] items-center gap-10 lg:gap-14 2xl:gap-16">
           <div className="max-w-2xl text-center lg:text-left">
             <h2 className="font-bold tracking-tight text-white leading-[1.05] text-[clamp(2rem,3.2vw,3.6rem)]">
@@ -962,12 +972,12 @@ function SiteFooter() {
         </p>
 
         <div className="flex gap-5 text-xs text-slate-500 justify-center md:justify-end">
-        <Link className="hover:text-slate-900 transition" to="/terms-of-service">
-          Terms
-        </Link>
-        <Link className="hover:text-slate-900 transition" to="/privacy">
-          Privacy
-        </Link>
+          <Link className="hover:text-slate-900 transition" to="/terms-of-service">
+            Terms
+          </Link>
+          <Link className="hover:text-slate-900 transition" to="/privacy">
+            Privacy
+          </Link>
         </div>
       </Container>
     </footer>
