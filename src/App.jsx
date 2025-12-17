@@ -1,6 +1,6 @@
 // App.jsx
 import React from "react";
-import clpJobs from "./assets/clpjobs.png";
+import galcLogo from "./assets/Logo30.png";
 
 // images
 import movingImg from "./assets/moving.webp";
@@ -8,24 +8,26 @@ import cleanImg from "./assets/clean.webp";
 import outdoorImg from "./assets/outdoor.webp";
 import propertyImg from "./assets/property.webp";
 import somethingImg from "./assets/something.webp";
-import howImg from "./assets/550.webp";
+import howImg from "./assets/55000.webp";
 
 import clpPeople1 from "./assets/clppeople.webp";
 import clpPeople2 from "./assets/clppeople2.webp";
 import clpPeople3 from "./assets/clppeople3.webp";
 
 import { motion, AnimatePresence } from "framer-motion";
-
 import { Analytics } from "@vercel/analytics/react";
+
+import { Routes, Route, Link, Navigate } from "react-router-dom";
+import TermsOfService from "./pages/TermsOfService.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 
 // react icons
 import {
-  FiTruck, // moving
-  FiTrash2, // clean out
-  FiSun, // outdoor
-  FiHome, // property
-  FiHelpCircle, // something else
-  // for how-it-works
+  FiTruck,
+  FiTrash2,
+  FiSun,
+  FiHome,
+  FiHelpCircle,
   FiEdit3,
   FiUsers,
   FiMessageCircle,
@@ -33,12 +35,71 @@ import {
 } from "react-icons/fi";
 
 const BOOKING_URL = "https://booking.communitylaborpartnership.com/";
+const PHONE_DISPLAY = "(888) 270-8355";
+const PHONE_TEL = "+18882708355";
+
+/* -------------------- Vertical rhythm (Apple x Uber) -------------------- */
+const RHYTHM = {
+  hero: "pt-14 sm:pt-20 lg:pt-24 2xl:pt-28 pb-12 sm:pb-16 lg:pb-20 2xl:pb-24",
+  section: "py-16 sm:py-20 lg:py-24 2xl:py-28",
+  sectionTight: "py-14 sm:py-16 lg:py-20 2xl:py-24",
+  headerMB: "mb-10 sm:mb-12 lg:mb-14",
+  footer: "py-10 sm:py-12",
+};
 
 const HOW_STEPS = [
   { id: 1, title: "Tell us the job", desc: "What you need, where, and when.", icon: FiEdit3 },
   { id: 2, title: "We assign workers", desc: "Matched to the task and timing.", icon: FiUsers },
   { id: 3, title: "We text you details", desc: "Names, arrival window, instructions.", icon: FiMessageCircle },
   { id: 4, title: "They show up & work", desc: "You direct, they get it done.", icon: FiCheckCircle },
+];
+
+// Apple x Uber-style “clear flow” with a live preview panel (kept for future use)
+const HOW_FLOW = [
+  {
+    ...HOW_STEPS[0],
+    kicker: "Step 1",
+    bullets: ["Choose a job type", "Add your address", "Pick a day + time window"],
+    previewTitle: "Booking request",
+    previewChips: ["Moving & lifting", "Tomorrow", "2 workers"],
+    bubbles: [
+      { from: "you", text: "Need 2 workers to unload a POD tomorrow at 2pm." },
+      { from: "clp", text: "Got it — we’re assigning a crew now." },
+    ],
+  },
+  {
+    ...HOW_STEPS[1],
+    kicker: "Step 2",
+    bullets: ["We match based on task + timing", "You can choose crew size", "Same-day often available"],
+    previewTitle: "Crew assigned",
+    previewChips: ["Crew: 2 workers", "Arrival window", "Confirmed"],
+    bubbles: [
+      { from: "clp", text: "Crew confirmed ✅" },
+      { from: "clp", text: "Arrival window: 1:40–2:00pm." },
+    ],
+  },
+  {
+    ...HOW_STEPS[2],
+    kicker: "Step 3",
+    bullets: ["You get names + arrival window", "Quick text updates", "Clear instructions"],
+    previewTitle: "Text updates",
+    previewChips: ["Names sent", "Window updates", "On the way"],
+    bubbles: [
+      { from: "clp", text: "Your workers: Thomas + Jay." },
+      { from: "clp", text: "On the way now. ETA ~12 minutes." },
+    ],
+  },
+  {
+    ...HOW_STEPS[3],
+    kicker: "Step 4",
+    bullets: ["They arrive and work", "You direct on-site", "You’re charged after completion"],
+    previewTitle: "Job complete",
+    previewChips: ["Work done", "Pay after", "Receipt"],
+    bubbles: [
+      { from: "clp", text: "All set — job complete. 👍" },
+      { from: "clp", text: "You’ll receive a receipt shortly." },
+    ],
+  },
 ];
 
 const WORKER_IMAGES = [clpPeople1, clpPeople2, clpPeople3];
@@ -61,16 +122,119 @@ const REVIEWS = [
   },
 ];
 
-export default function App() {
+/* -------------------- Layout helpers -------------------- */
+
+function Container({ children, className = "" }) {
   return (
-    <div className="min-h-screen bg-white text-slate-900">
+    <div
+      className={[
+        "mx-auto w-full max-w-7xl 2xl:max-w-[88rem]",
+        "px-4 sm:px-6 lg:px-10 2xl:px-14",
+        className,
+      ].join(" ")}
+    >
+      {children}
+    </div>
+  );
+}
+
+function PrimaryButton({
+  href,
+  children,
+  className = "",
+  variant = "dark", // "dark" | "light"
+  ...props
+}) {
+  const common =
+    "inline-flex items-center justify-center rounded-full font-semibold transition " +
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2";
+
+  const styles =
+    variant === "light"
+      ? "bg-gradient-to-b from-white to-slate-100 text-slate-950 " +
+        "shadow-[0_18px_45px_rgba(0,0,0,0.35)] ring-1 ring-white/25 " +
+        "hover:to-white hover:shadow-[0_22px_60px_rgba(0,0,0,0.42)] active:scale-[0.99] " +
+        "px-7 sm:px-9 py-3 sm:py-3.5 text-sm sm:text-base " +
+        "focus-visible:ring-offset-slate-950"
+      : "bg-slate-900 text-white shadow-sm hover:bg-slate-800 " +
+        "px-6 sm:px-7 py-2.5 sm:py-3 text-sm sm:text-base " +
+        "focus-visible:ring-offset-white";
+
+  return (
+    <a href={href} className={`${common} ${styles} ${className}`} {...props}>
+      {children}
+    </a>
+  );
+}
+
+function SecondaryButton({ href, children, className = "", ...props }) {
+  const base =
+    "inline-flex items-center justify-center rounded-full border border-white/20 text-white " +
+    "px-7 sm:px-9 py-3 sm:py-3.5 text-sm sm:text-base font-semibold " +
+    "hover:bg-white/10 transition " +
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950";
+  return (
+    <a href={href} className={`${base} ${className}`} {...props}>
+      {children}
+    </a>
+  );
+}
+
+export default function App() {
+  // Small perf win: warm up the booking domain (DNS + TLS) without changing UI/behavior.
+  React.useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    try {
+      const origin = new URL(BOOKING_URL).origin;
+
+      const dns = document.createElement("link");
+      dns.rel = "dns-prefetch";
+      dns.href = origin;
+
+      const pre = document.createElement("link");
+      pre.rel = "preconnect";
+      pre.href = origin;
+      pre.crossOrigin = "";
+
+      document.head.appendChild(dns);
+      document.head.appendChild(pre);
+
+      return () => {
+        dns.remove();
+        pre.remove();
+      };
+    } catch {
+      return;
+    }
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-white text-slate-900 antialiased selection:bg-rose-100 selection:text-slate-900">
       <TopBar />
-      <Hero />
-      <StatBelt />
-      <TaskCategories />
-      {<HowItWorksChat />}
-      <TrustSectionRail />
-      <FinalCTA />
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Hero />
+              <StatBelt />
+              <TaskCategories />
+              <HowItWorksChat />
+              <TrustSectionRail />
+              <FinalCTA />
+            </>
+          }
+        />
+
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+
+        {/* optional: keep your app clean on unknown routes */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+
       <SiteFooter />
       <Analytics />
     </div>
@@ -80,29 +244,30 @@ export default function App() {
 /* -------------------- Top bar -------------------- */
 function TopBar() {
   return (
-    <header className="bg-white">
-      <div className="w-full h-20 flex flex-wrap md:flex-nowrap items-center justify-between gap-3 px-5 lg:px-10">
-        {/* left: logo image */}
-        <a href="/" className="flex items-center h-full">
-          <img
-            src={clpJobs}
-            alt="Community Labor Partnership"
-            className="h-12 sm:h-12 md:h-14 lg:h-16 w-auto"
-          />
-        </a>
+    <header className="sticky top-0 z-50 bg-white">
+      <div className="mx-auto w-full px-4 sm:px-8 lg:px-10 xl:px-10">
+        <div className="flex h-[84px] sm:h-[92px] lg:h-[104px] items-center justify-between">
+          {/* left: logo */}
+          <Link to="/" className="flex items-center">
+            <img
+              src={galcLogo}
+              alt="Great American Labor "
+              className="h-11 sm:h-12 md:h-14 lg:h-16 w-auto"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </Link>
 
-        {/* right: phone + big pill */}
-        <div className="flex items-center gap-3 sm:gap-5 ml-auto">
-          <p className="hidden md:block text-base lg:text-lg text-slate-700">
-            Call or text:{" "}
-            <span className="font-bold text-slate-900">(888) 270-8355</span>
-          </p>
-          <a
-            href={BOOKING_URL}
-            className="rounded-full bg-slate-900 text-white px-6 sm:px-7 md:px-8 lg:px-9 py-2.5 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold hover:bg-slate-800 transition shrink-0"
-          >
-            Find workers
-          </a>
+          {/* right: phone + CTA */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            <PrimaryButton
+              href={BOOKING_URL}
+              className="shrink-0 text-base sm:text-lg px-6 sm:px-8 lg:px-9 py-3 sm:py-3.5"
+            >
+              Find workers
+            </PrimaryButton>
+          </div>
         </div>
       </div>
     </header>
@@ -113,74 +278,79 @@ function TopBar() {
 function Hero() {
   return (
     <section className="bg-white">
-      {/* doubled-ish vertical space */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-16 sm:pt-32 md:pt-36 lg:pt-42 pb-16 sm:pb-20 md:pb-24 lg:pb-42 text-center">
-        <h1 className="mx-auto max-w-5xl text-[2.4rem] sm:text-[2.7rem] md:text-[3.6rem] lg:text-[5.5rem] font-bold leading-[1.15] sm:leading-[1.15] md:leading-[1.15] lg:leading-[1.20] text-slate-900">
-          On-site help <span className="text-sky-500">when you need it.</span>
-        </h1>
-
-        {/* slightly larger + thicker hero copy */}
-        <p className="mt-6 sm:mt-7 mx-auto max-w-3xl text-base sm:text-lg md:text-xl leading-relaxed text-slate-700 font-base">
-          For moving, clearing out rooms, or jobs outside, tell us what’s needed
-          and we’ll staff it.
-        </p>
-
-        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
-          {/* bigger, more modern CTA */}
-          <a
-            href={BOOKING_URL}
-            className="w-full sm:w-auto justify-center rounded-full bg-slate-900 text-white px-7 sm:px-9 py-3.5 text-sm md:text-base font-semibold hover:bg-slate-800 transition inline-flex items-center gap-2 shadow-sm"
+      <Container className={`${RHYTHM.hero} text-center`}>
+        <div className="mx-auto max-w-5xl">
+          <h1
+            className="font-bold tracking-tight leading-[1.05] text-[clamp(2.2rem,4.2vw,5.6rem)]"
+            style={{ color: "#09152f" }}
           >
-            Book workers
-            <span aria-hidden="true" className="text-base">
-              →
-            </span>
-          </a>
-          {/* keep this, but make it feel like it belongs */}
-          <p className="text-sm text-slate-500 font-base px-2 sm:px-4 py-2 text-center">
-            Fast assignment · Reliable workers · Same day service
+            Labor for Any Job
+          </h1>
+
+          <p
+            className="mt-4 font-semibold tracking-tight text-[clamp(1.15rem,1.7vw,1.75rem)]"
+            style={{ color: "#e11d48" }}
+          >
+            Extra hands, on your schedule.
           </p>
+
+          <p className="mt-4 mx-auto max-w-3xl leading-relaxed text-slate-700 text-[clamp(1rem,1.2vw,1.35rem)]">
+            Moving, cleaning, rearranging, outdoor work—tell us the details and we’ll send a crew.
+            Our tech finds the right vetted workers and keeps you updated.
+          </p>
+
+          <div className="mt-9 sm:mt-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <a
+              href={BOOKING_URL}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 text-white px-8 sm:px-10 py-3.5 sm:py-4 text-sm sm:text-base font-semibold shadow-sm hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2"
+            >
+              Book workers <span aria-hidden="true">→</span>
+            </a>
+
+            <div className="w-full sm:w-auto rounded-full border border-slate-200 bg-white px-5 sm:px-6 py-2.5 text-xs sm:text-sm text-slate-600">
+              Fast assignment · Reliable workers · Same day service
+            </div>
+          </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
 
-/* -------------------- Stat belt (dark divider) -------------------- */
+/* -------------------- Stat belt -------------------- */
 function StatBelt() {
   return (
     <section className="relative bg-slate-950 overflow-hidden">
-      {/* soft spotlight, no gap at the top */}
       <div
         className="pointer-events-none absolute inset-0
-        bg-[radial-gradient(circle_at_center,rgba(72,160,255,0.2),rgba(15,23,42,0)_70%)]"
+        bg-[radial-gradient(circle_at_center,rgba(72,160,255,0.18),rgba(15,23,42,0)_70%)]"
       />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-14 sm:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-14 xl:gap-x-20 text-center">
+      <Container className={`relative ${RHYTHM.sectionTight}`}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-10 xl:gap-x-14 text-center">
           <Stat number="96%" label="Fill Rate" />
           <Stat number="120,000+" label="Jobs Staffed" />
           <Stat number="90,000" label="Vetted Workers" />
           <Stat number="4.8 / 5" label="Google Rating" />
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
 
 function Stat({ number, label }) {
   return (
-    <div className="flex flex-col items-center gap-3">
-      <div className="text-[2.7rem] md:text-[4rem] leading-none font-bold text-white tracking-tight">
+    <div className="flex flex-col items-center gap-2">
+      <div className="leading-none font-bold text-white tracking-tight text-[clamp(2.2rem,3.2vw,3.7rem)]">
         {number}
       </div>
-      <div className="text-sm md:text-lg font-semibold text-slate-100/90">
+      <div className="font-semibold text-slate-100/90 text-[clamp(0.85rem,1.1vw,1.1rem)]">
         {label}
       </div>
     </div>
   );
 }
 
-/* -------------------- Task categories (interactive, wider selector) -------------------- */
+/* -------------------- Task categories -------------------- */
 function TaskCategories() {
   const options = [
     {
@@ -238,45 +408,45 @@ function TaskCategories() {
   const previewRef = React.useRef(null);
 
   return (
-    <section className="bg-white pt-16 sm:pt-20 lg:pt-24 pb-0 sm:pb-20 lg:pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
-        {/* header */}
-        <header className="max-w-3xl mb-10 sm:mb-12 lg:mb-14">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900">
-            What do you need help with today?
+    <section className={`bg-white ${RHYTHM.section}`}>
+      <Container>
+        <header className={`max-w-3xl ${RHYTHM.headerMB}`}>
+          <h2 className="font-bold tracking-tight text-slate-900 text-[clamp(1.9rem,3vw,3.4rem)]">
+            How can we help?
           </h2>
-          <p className="mt-4 text-lg md:text-xl text-slate-700">
+          <p className="mt-4 text-slate-700 text-[clamp(1rem,1.2vw,1.25rem)]">
             Pick a job type — we’ll send workers that match it.
           </p>
         </header>
 
-        {/* body */}
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-          {/* left preview */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 2xl:gap-14">
           <div
             ref={previewRef}
-            className="flex-1 rounded-3xl border border-slate-100 bg-slate-50/60 overflow-hidden flex flex-col"
+            className="flex-1 rounded-3xl border border-slate-200/60 bg-slate-50/50 overflow-hidden flex flex-col shadow-[0_18px_60px_rgba(15,23,42,0.06)]"
           >
-            <div className="relative h-52 sm:h-56 md:h-64 lg:h-[420px] xl:h-[460px]">
+            <div className="relative h-56 sm:h-64 lg:h-[420px] xl:h-[480px] 2xl:h-[540px]">
               <img
                 src={active.image}
                 alt={active.title}
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+                fetchPriority="low"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent pointer-events-none" />
               {active.badge ? (
-                <span className="absolute top-5 left-5 inline-flex items-center gap-1 rounded-full bg-white/90 text-slate-900 text-[0.65rem] font-semibold px-3 py-1">
+                <span className="absolute top-5 left-5 inline-flex items-center rounded-full bg-white/90 text-slate-900 text-xs font-semibold px-3 py-1">
                   {active.badge}
                 </span>
               ) : null}
             </div>
 
-            <div className="p-5 sm:p-6 lg:p-8 space-y-5">
+            <div className="p-6 sm:p-7 lg:p-8 space-y-5">
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
+                <h3 className="text-slate-900 font-bold text-[clamp(1.15rem,1.4vw,1.8rem)]">
                   {active.title}
                 </h3>
-                <p className="mt-2 text-sm md:text-xl text-slate-600 leading-relaxed">
+                <p className="mt-3 text-slate-600 leading-relaxed text-[clamp(0.98rem,1.1vw,1.2rem)]">
                   {active.desc}
                 </p>
               </div>
@@ -285,87 +455,81 @@ function TaskCategories() {
                 {active.chips?.map((chip) => (
                   <span
                     key={chip}
-                    className="rounded-full bg-white border border-slate-100 px-3 py-1 text-xs text-slate-600"
+                    className="rounded-full bg-white border border-slate-200/70 px-3.5 py-1.5 text-xs text-slate-600"
                   >
                     {chip}
                   </span>
                 ))}
               </div>
 
-              <a
-                href={BOOKING_URL}
-                className="w-full sm:w-auto flex justify-center sm:justify-start rounded-full bg-slate-900 text-white px-6 py-3 text-base font-semibold hover:bg-slate-800 transition inline-flex items-center gap-1.5"
-              >
-                Book
-                <span aria-hidden="true">→</span>
-              </a>
+              <PrimaryButton href={BOOKING_URL} className="w-full sm:w-auto">
+                Book <span aria-hidden="true">→</span>
+              </PrimaryButton>
 
-              <p className="text-[0.65rem] text-slate-400 pt-1">
+              <p className="text-xs text-slate-500 pt-1">
                 Labor-only service — you provide any trucks, tools, or materials.
               </p>
             </div>
           </div>
 
-          {/* right selector */}
-          <div className="w-full lg:w-[440px] xl:w-[470px] space-y-3">
+          <div className="w-full lg:w-[440px] xl:w-[500px] 2xl:w-[560px] space-y-3">
             {options.map((item) => {
               const isActive = item.id === active.id;
               const Icon = iconMap[item.id];
+
               return (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => {
                     setActive(item);
-                    if (typeof window !== "undefined" && window.innerWidth < 1024 && previewRef.current) {
-                      previewRef.current.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
+                    if (
+                      typeof window !== "undefined" &&
+                      window.innerWidth < 1024 &&
+                      previewRef.current
+                    ) {
+                      previewRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
                     }
                   }}
-                  className={`group w-full flex items-start sm:items-center gap-4 rounded-2xl border transition py-6 lg:py-7 min-h-[110px]
-                    ${
-                      isActive
-                        ? "border-sky-200 bg-sky-50/70 shadow-[0_12px_45px_rgba(15,23,42,0.05)] ring-2 ring-sky-100"
-                        : "border-slate-100 hover:border-slate-200 hover:bg-slate-50/70"
-                    }`}
+                  className={[
+                    "group w-full flex items-start sm:items-center gap-4 rounded-2xl border transition",
+                    "py-6 sm:py-7 px-6 sm:px-7",
+                    isActive
+                      ? "border-rose-200 bg-rose-50/70 shadow-[0_20px_70px_rgba(15,23,42,0.07)] ring-2 ring-rose-100"
+                      : "border-slate-200/60 hover:border-slate-300 hover:bg-slate-50",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2",
+                  ].join(" ")}
                 >
                   <div
-                    className={`h-10 w-1 rounded-full transition
-                    ${
-                      isActive
-                        ? "bg-sky-500"
-                        : "bg-slate-200 group-hover:bg-slate-300"
+                    className={`h-12 w-1 rounded-full transition ${
+                      isActive ? "bg-rose-600" : "bg-slate-200 group-hover:bg-slate-300"
                     }`}
                   />
-                  <div className="h-10 w-10 rounded-2xl bg-sky-50 flex items-center justify-center shrink-0">
+
+                  <div className="h-12 w-12 rounded-2xl bg-white border border-slate-200/70 flex items-center justify-center shrink-0">
                     {Icon ? (
-                      <Icon
-                        className={`text-sky-500 ${isActive ? "scale-110" : ""}`}
-                        size={18}
-                      />
+                      <Icon className={`text-rose-600 ${isActive ? "scale-110" : ""}`} size={18} />
                     ) : (
-                      <span className="text-sky-500 text-xs">•</span>
+                      <span className="text-rose-600 text-xs">•</span>
                     )}
                   </div>
+
                   <div className="flex-1 text-left">
                     <p
-                      className={`text-sm md:text-lg font-bold ${
+                      className={`font-bold ${
                         isActive ? "text-slate-900" : "text-slate-800"
-                      }`}
+                      } text-[clamp(0.95rem,1vw,1.2rem)]`}
                     >
                       {item.title}
                     </p>
-                    <p className="text-xs md:text-[0.9rem] text-slate-500 mt-1">
+                    <p className="mt-1 text-slate-500 text-[clamp(0.8rem,0.9vw,1rem)]">
                       {item.subtitle}
                     </p>
                   </div>
+
                   <span
-                    className={`text-xs transition ${
-                      isActive
-                        ? "text-sky-500"
-                        : "text-slate-300 group-hover:text-slate-400"
+                    className={`text-sm transition ${
+                      isActive ? "text-rose-600" : "text-slate-300 group-hover:text-slate-400"
                     }`}
                   >
                     →
@@ -375,98 +539,158 @@ function TaskCategories() {
             })}
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
 
+/* -------------------- How it works (image = exact steps height on desktop) -------------------- */
 function HowItWorksChat() {
+  const stepsRef = React.useRef(null);
+  const [stepsH, setStepsH] = React.useState("auto");
+
+  React.useLayoutEffect(() => {
+    const el = stepsRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const h = el.getBoundingClientRect().height;
+      setStepsH(`${Math.round(h)}px`);
+    };
+
+    update();
+
+    let ro = null;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(update);
+      ro.observe(el);
+    }
+
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      if (ro) ro.disconnect();
+    };
+  }, []);
+
   return (
-    <section className="bg-white py-16 sm:py-20 lg:py-24">
-      {/* added lg:items-stretch so the right column can be full height */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 flex flex-col lg:flex-row gap-8 sm:gap-10 lg:items-stretch">
-        {/* left: pills */}
-        <div className="flex-1">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900">
-            How it <span className="text-sky-500">Works</span>
+    <section className={`bg-white ${RHYTHM.section}`}>
+      <Container>
+        <header className={`max-w-3xl ${RHYTHM.headerMB}`}>
+          <h2 className="font-bold tracking-tight text-slate-900 text-[clamp(1.9rem,3vw,3.4rem)]">
+            Our <span className="text-rose-600">Process</span>
           </h2>
-          <p className="mt-4 text-lg md:text-xl text-slate-700">
+          <p className="mt-4 text-slate-700 text-[clamp(1rem,1.2vw,1.25rem)]">
             Four steps and you’ve got people on-site.
           </p>
+        </header>
 
-          <div className="mt-8 space-y-4">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-12 2xl:gap-14 items-start">
+          {/* Left: steps */}
+          <div ref={stepsRef} className="flex-1 w-full space-y-3">
             {HOW_STEPS.map((step) => {
               const Icon = step.icon;
               return (
                 <div
                   key={step.id}
-                  className="flex items-start gap-4 rounded-2xl border border-slate-100 bg-slate-50/60 hover:bg-white transition shadow-[0_16px_35px_rgba(15,23,42,0.02)] p-4"
+                  className={[
+                    "group w-full flex items-start sm:items-center gap-4 rounded-2xl border transition",
+                    "py-5 sm:py-6 px-5 sm:px-6",
+                    "border-slate-200/60 bg-slate-50/50 hover:border-slate-300 hover:bg-white",
+                    "shadow-[0_16px_45px_rgba(15,23,42,0.04)]",
+                  ].join(" ")}
                 >
-                  <div className="h-10 w-10 rounded-full bg-slate-900 text-white flex items-center justify-center mt-0.5 shrink-0">
-                    <Icon size={18} />
+                  <div className="h-10 sm:h-12 w-1 rounded-full bg-slate-200 group-hover:bg-slate-300 transition" />
+
+                  <div className="h-11 w-11 rounded-2xl bg-white border border-slate-200/70 flex items-center justify-center shrink-0">
+                    <Icon className="text-rose-600" size={18} />
                   </div>
+
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="text-xs uppercase tracking-wide text-slate-400">
-                        Step {step.id}
-                      </p>
-                    </div>
-                    <h3 className="text-base md:text-xl font-bold text-slate-900 mt-1">
+                    <p className="text-[0.75rem] uppercase tracking-wide text-slate-400">
+                      Step {step.id}
+                    </p>
+                    <h3 className="mt-1 font-bold text-slate-900 text-[clamp(1rem,1vw,1.25rem)]">
                       {step.title}
                     </h3>
-                    <p className="text-base text-slate-500 mt-1">
+                    <p className="mt-1 text-slate-600 leading-relaxed text-[clamp(0.95rem,0.95vw,1.1rem)]">
                       {step.desc}
                     </p>
                   </div>
+
+                  <span className="text-sm text-slate-300 group-hover:text-slate-400 transition">
+                    →
+                  </span>
                 </div>
               );
             })}
           </div>
-        </div>
 
-        {/* right: just the big image */}
-        <div className="w-full lg:w-[420px] lg:min-h-[420px]">
-          <img
-            src={howImg}
-            alt="Confirmed workers"
-            className="w-full h-full rounded-2xl object-cover"
-          />
+          {/* Right: raw image — height locked to steps on lg+ */}
+          <div
+            className="w-full max-w-[520px] mx-auto lg:mx-0 lg:w-[min(42vw,600px)] lg:h-[var(--steps-h)] shrink-0"
+            style={{ "--steps-h": stepsH }}
+          >
+            <img
+              src={howImg}
+              alt="Confirmed workers"
+              className="w-full h-auto lg:h-full object-contain"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
+          </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
 
+/* -------------------- (kept as-is) MessageBubble -------------------- */
+function MessageBubble({ from, text }) {
+  const isYou = from === "you";
+  return (
+    <div className={`flex ${isYou ? "justify-end" : "justify-start"}`}>
+      <div
+        className={[
+          "max-w-[86%] rounded-2xl px-4 py-3 text-sm leading-relaxed",
+          isYou
+            ? "bg-slate-900 text-white shadow-sm"
+            : "bg-white border border-slate-200/60 text-slate-800",
+        ].join(" ")}
+      >
+        <p>{text}</p>
+      </div>
+    </div>
+  );
+}
+
+/* -------------------- Trust / reviews -------------------- */
 function TrustSectionRail() {
   const [active, setActive] = React.useState(0);
   const total = REVIEWS.length;
 
   React.useEffect(() => {
-    const id = setInterval(() => {
-      setActive((prev) => (prev + 1) % total);
-    }, 5000); // slow, subtle
+    const id = setInterval(() => setActive((prev) => (prev + 1) % total), 5000);
     return () => clearInterval(id);
   }, [total]);
 
   return (
-    <section className="bg-slate-50 py-16 sm:py-20 lg:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
-        {/* heading */}
-        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 lg:mb-14">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900">
+    <section className={`bg-slate-50 ${RHYTHM.section}`}>
+      <Container>
+        <div className={`text-center max-w-3xl mx-auto ${RHYTHM.headerMB}`}>
+          <h2 className="font-bold tracking-tight text-slate-900 text-[clamp(1.9rem,3vw,3.4rem)]">
             People use us for everyday jobs
           </h2>
-          <p className="mt-4 text-lg md:text-xl text-slate-700">
-            Real feedback from customers using Community Labor Partnership.
+          <p className="mt-4 text-slate-700 text-[clamp(1rem,1.2vw,1.25rem)]">
+            Real feedback from customers using Great American Labor .
           </p>
         </div>
 
-        {/* content row */}
-        <div className="flex flex-col lg:flex-row gap-8 sm:gap-10 items-stretch">
-          {/* LEFT: image carousel (clean) */}
-          <div className="w-full lg:w-[420px] xl:w-[460px]">
-            <div className="rounded-3xl overflow-hidden bg-white border border-slate-100 shadow-sm h-full min-h-[280px] sm:min-h-[360px]">
-              <div className="relative w-full h-full min-h-[280px] sm:min-h-[360px]">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 2xl:gap-14 items-stretch">
+          <div className="w-full lg:w-[440px] xl:w-[520px] 2xl:w-[600px]">
+            <div className="rounded-3xl overflow-hidden bg-white border border-slate-200/60 shadow-sm h-full min-h-[280px] sm:min-h-[360px] 2xl:min-h-[420px]">
+              <div className="relative w-full h-full min-h-[280px] sm:min-h-[360px] 2xl:min-h-[420px]">
                 <AnimatePresence mode="sync">
                   <motion.img
                     key={active}
@@ -476,49 +700,50 @@ function TrustSectionRail() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 1, delay: 0.05, ease: "easeOut" }}
+                    transition={{ duration: 0.9, ease: "easeOut" }}
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority="low"
                   />
                 </AnimatePresence>
               </div>
             </div>
           </div>
 
-          {/* RIGHT: review synced with image */}
           <div className="flex-1">
-            <div className="h-full rounded-3xl bg-white border border-slate-100 shadow-[0_12px_30px_rgba(15,23,42,0.03)] p-5 sm:p-6 md:p-8 flex flex-col justify-between min-h-[280px] sm:min-h-[320px]">
+            <div className="h-full rounded-3xl bg-white border border-slate-200/60 shadow-[0_18px_60px_rgba(15,23,42,0.06)] p-6 sm:p-7 lg:p-9 flex flex-col justify-between min-h-[280px] sm:min-h-[360px] 2xl:min-h-[420px]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={active}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
                 >
-                  <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
                     <span className="text-amber-400 text-base">★★★★★</span>
                     <span className="text-xs text-slate-400">
                       {REVIEWS[active].author} on Google
                     </span>
                   </div>
-                  <h3 className="text-base md:text-lg font-bold text-slate-900">
+
+                  <h3 className="font-bold text-slate-900 text-[clamp(1.02rem,1.1vw,1.35rem)]">
                     {REVIEWS[active].title}
                   </h3>
-                  <p className="mt-3 text-base sm:text-lg leading-relaxed text-slate-600">
+
+                  <p className="mt-4 leading-relaxed text-slate-600 text-[clamp(0.98rem,1.1vw,1.25rem)]">
                     {REVIEWS[active].text}
                   </p>
                 </motion.div>
               </AnimatePresence>
 
-              {/* dots */}
-              <div className="mt-6 flex gap-2">
+              <div className="mt-7 sm:mt-8 flex gap-2">
                 {REVIEWS.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => setActive(idx)}
                     className={`h-2.5 rounded-full transition-all ${
-                      idx === active
-                        ? "w-8 bg-slate-900"
-                        : "w-2.5 bg-slate-200 hover:bg-slate-300"
+                      idx === active ? "w-8 bg-slate-900" : "w-2.5 bg-slate-200 hover:bg-slate-300"
                     }`}
                     aria-label={`Show review ${idx + 1}`}
                   />
@@ -527,62 +752,66 @@ function TrustSectionRail() {
             </div>
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
-function Tag({ children }) {
-  return (
-    <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-sm text-slate-700 leading-relaxed">
-      {children}
-    </div>
-  );
-}
 
-/* -------------------- Final CTA -------------------- */
+/* -------------------- Final CTA (solid like stats) -------------------- */
 function FinalCTA() {
   return (
-    <section className="bg-slate-950 py-20 sm:py-24 w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
-        {/* left copy */}
-        <div className="max-w-xl text-center lg:text-left">
-          <h2 className="mt-1 lg:mt-5 text-3xl md:text-5xl font-bold tracking-tight text-white">
-            Ready to get help?
-          </h2>
-          <p className="mt-4 text-base sm:text-lg md:text-xl text-slate-200">
-            Tell us the job and when you want it. We’ll assign workers and text you the plan.
-          </p>
-        </div>
+    <section className="relative bg-slate-950 overflow-hidden">
+      <div
+        className="pointer-events-none absolute inset-0
+        bg-[radial-gradient(circle_at_center,rgba(72,160,255,0.16),rgba(15,23,42,0)_70%)]"
+      />
+      <Container className={`relative ${RHYTHM.section}`}>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] items-center gap-10 lg:gap-14 2xl:gap-16">
+          <div className="max-w-2xl text-center lg:text-left">
+            <h2 className="font-bold tracking-tight text-white leading-[1.05] text-[clamp(2rem,3.2vw,3.6rem)]">
+              Ready to get help?
+            </h2>
+            <p className="mt-5 text-slate-200/90 leading-relaxed text-[clamp(1rem,1.2vw,1.25rem)]">
+              Tell us the job and when you want it. We’ll handle the rest.
+            </p>
+          </div>
 
-        {/* right actions */}
-        <div className="flex flex-col sm:flex-row flex-wrap gap-3 w-full lg:w-auto justify-center lg:justify-end">
-          <a
-            href={BOOKING_URL}
-            className="w-full sm:w-auto text-center rounded-full bg-white text-slate-950 px-8 lg:px-10 py-3.5 text-base lg:text-lg font-semibold hover:bg-slate-100 transition"
-          >
-            Book workers
-          </a>
-          <button className="w-full sm:w-auto rounded-full border border-white/20 text-base lg:text-lg text-white px-8 lg:px-10 py-3.5 hover:bg-white/10 transition">
-            Call (888) 270-8355
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full lg:w-auto justify-center lg:justify-end">
+            <PrimaryButton href={BOOKING_URL} variant="light" className="w-full sm:w-auto">
+              Book workers
+            </PrimaryButton>
+
+            <SecondaryButton href={`tel:${PHONE_TEL}`} className="w-full sm:w-auto">
+              Call {PHONE_DISPLAY}
+            </SecondaryButton>
+          </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
+
 /* -------------------- Footer -------------------- */
 function SiteFooter() {
   return (
-    <footer className="bg-slate-50 border-t border-slate-200 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-        <p className="text-xs text-slate-400">
-          © {new Date().getFullYear()} Community Labor Partnership · (888) 270-8335
+    <footer className={`bg-slate-50 border-t border-slate-200 ${RHYTHM.footer}`}>
+      <Container className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+        <p className="text-xs text-slate-500">
+          © {new Date().getFullYear()} Great American Labor  ·{" "}
+          <a className="hover:text-slate-900 transition" href={`tel:${PHONE_TEL}`}>
+            {PHONE_DISPLAY}
+          </a>
         </p>
-        <div className="flex gap-4 text-xs text-slate-400 justify-center md:justify-end">
-          <button>Terms</button>
-          <button>Privacy</button>
+
+        <div className="flex gap-5 text-xs text-slate-500 justify-center md:justify-end">
+        <Link className="hover:text-slate-900 transition" to="/terms-of-service">
+          Terms
+        </Link>
+        <Link className="hover:text-slate-900 transition" to="/privacy">
+          Privacy
+        </Link>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }
