@@ -832,7 +832,7 @@ function WhyUs() {
     <section className={`bg-white ${RHYTHM.sectionHalfPT} ${RHYTHM.sectionHalfPB}`}>
       <Container>
         {/* centered header */}
-        <header className={`text-center max-w-3xl mx-auto ${RHYTHM.headerMB}`}>
+        <header className={`text-center max-w-3xl lg:max-w-5xl mx-auto ${RHYTHM.headerMB}`}>
           <h2 className="font-bold tracking-tight text-slate-900 text-[clamp(1.9rem,3vw,3.4rem)]">
             Why <span className="text-rose-600">Us</span>
           </h2>
