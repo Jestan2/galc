@@ -3,14 +3,14 @@ import React from "react";
 import galcLogo from "./assets/Logo40.png";
 
 // images
-import movingImg from "./assets/moving.webp";
-import cleanImg from "./assets/warehouse.webp";
-import outdoorImg from "./assets/outdoor.webp";
-import propertyImg from "./assets/property.webp";
-import somethingImg from "./assets/something.webp";
+import movingImg from "./assets/move.webp";
+import cleanImg from "./assets/warehouseing2.webp";
+import outdoorImg from "./assets/junk.webp";
+import propertyImg from "./assets/construction.webp";
+import somethingImg from "./assets/somethingelse.webp";
 import movingProcessImg from "./assets/movingprocess.webp";
 import warehouseingProcessImg from "./assets/warehousingprocess.webp";
-import eventImg from "./assets/event.webp";
+import eventImg from "./assets/eventsetup.webp";
 import clpPeople1 from "./assets/clppeople.webp";
 import clpPeople2 from "./assets/clppeople2.webp";
 import clpPeople3 from "./assets/clppeople3.webp";
@@ -34,6 +34,8 @@ import {
   FiUsers,
   FiMessageCircle,
   FiCheckCircle,
+  FiPackage,
+  FiTool,
 } from "react-icons/fi";
 
 const BOOKING_URL = "https://book.greatamericanlabor.com/";
@@ -146,13 +148,7 @@ function Container({ children, className = "" }) {
   );
 }
 
-function PrimaryButton({
-  href,
-  children,
-  className = "",
-  variant = "dark", // "dark" | "light"
-  ...props
-}) {
+function PrimaryButton({ href, children, className = "", variant = "dark", ...props }) {
   const common =
     "inline-flex items-center justify-center rounded-full font-semibold transition " +
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2";
@@ -304,8 +300,8 @@ function Hero() {
           </p>
 
           <p className="mt-4 mx-auto max-w-3xl leading-relaxed text-slate-700 text-[clamp(1rem,1.2vw,1.35rem)]">
-            Moving, cleaning, rearranging, outdoor work, tell us the details and we’ll send a crew.
-            Our tech finds the right vetted workers and keeps you updated.
+            Moving, cleaning, rearranging, outdoor work, tell us the details and we’ll send a crew. Our tech finds the
+            right vetted workers and keeps you updated.
           </p>
 
           <div className="mt-9 sm:mt-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
@@ -352,78 +348,95 @@ function Stat({ number, label }) {
       <div className="leading-none font-bold text-white tracking-tight text-[clamp(2.2rem,3.2vw,3.7rem)]">
         {number}
       </div>
-      <div className="font-semibold text-slate-100/90 text-[clamp(0.85rem,1.1vw,1.1rem)]">
-        {label}
-      </div>
+      <div className="font-semibold text-slate-100/90 text-[clamp(0.85rem,1.1vw,1.1rem)]">{label}</div>
     </div>
   );
 }
 
 /* -------------------- Task categories -------------------- */
 function TaskCategories() {
-  const options = [
-    {
-      id: "moving",
-      title: "Moving & lifting",
-      subtitle: "Load/unload trucks, PODs, or storage units",
-      desc: "You bring the vehicle, we send strong, reliable workers who can carry the heavy stuff and follow directions.",
-      badge: "Most booked",
-      image: movingImg,
-      chips: ["Flex crew size", "Apartments / homes", "Same-day booking"],
-    },
-    {
-      id: "cleanout",
-      title: "Clean out a space",
-      subtitle: "Warehouses, Garages, basements,",
-      desc: "Tell us what stays and what goes, workers do the carrying, bagging, and moving so you don’t have to.",
-      image: cleanImg,
-      chips: ["Sort + haul", "You point, they move", "Indoor / outdoor"],
-    },
-    {
-      id: "outdoor",
-      title: "Outdoor & yard jobs",
-      subtitle: "Raking, bagging, hauling branches",
-      desc: "You’ve got the tools or materials, we send labor to rake, bag, move soil, or help with exterior jobs.",
-      image: outdoorImg,
-      chips: ["Heavy yard work", "Seasonal cleanups", "Crew format"],
-    },
-    {
-      id: "property",
-      title: "Property & turnover work",
-      subtitle: "Unit prep, furniture moves, junk removal",
-      desc: "Pick the day and time, we send workers to help turn units, move furniture, or remove junk for landlords and small operators.",
-      image: propertyImg,
-      chips: ["Landlords", "Small biz", "Repeat jobs"],
-    },
-    {
-      id: "events",
-      title: "Events",
-      subtitle: "Setup, staging & tear down",
-      desc: "Need extra hands for an event? We can send a crew to set up tables, chairs, staging, and help with tear down after.",
-      image: eventImg,
-      chips: ["Setup + teardown", "Tables / chairs", "Fast crew"],
-    },
-    {
-      id: "other",
-      title: "Something else?",
-      subtitle: "Describe the job and we’ll staff it",
-      desc: "If you need people on-site and the task is clear, we can assign workers in your area.",
-      image: somethingImg,
-      chips: ["Events", "Odd jobs", "One-offs"],
-    },
-  ];
+  // ✅ memoized so we can preload once and avoid re-creating the array each render
+  const options = React.useMemo(
+    () => [
+      {
+        id: "logistics",
+        title: "Logistics load and unload",
+        subtitle: "Trucks, trailers, PODs, containers, storage units",
+        desc:
+          "Labor-only crews for fast loading and unloading. We handle lifting, carrying, and moving items to the exact spots you direct. Ideal for tight timelines, large deliveries, and overflow days.",
+        badge: "Most booked",
+        image: movingImg,
+        chips: ["Flexible crew size", "Clear arrival window", "Same-day often available"],
+      },
+      {
+        id: "warehouse",
+        title: "Warehouse support",
+        subtitle: "Receiving help, staging, pick and pack support",
+        desc:
+          "Extra hands for busy warehouse days. We support receiving, hand unloading, staging inventory, order prep, and general floor assistance under your on-site lead. Great for consistent, repeat staffing.",
+        image: cleanImg,
+        chips: ["Receiving support", "Staging and organization", "Repeat staffing"],
+      },
+      {
+        id: "events",
+        title: "Event setup and teardown",
+        subtitle: "Chairs, tables, staging, booths, breakdown crews",
+        desc:
+          "Reliable crews for setup day and breakdown night. We handle tables, chairs, staging pieces, booth materials, and load-out support so venues clear on time and schedules stay on track.",
+        image: eventImg,
+        chips: ["Setup and breakdown", "Time-critical jobs", "Large crews available"],
+      },
+      {
+        id: "junk",
+        title: "Junk-outs and disposal labor",
+        subtitle: "Cleanouts, lifting, sorting, loading for haul-away",
+        desc:
+          "Fast cleanout labor for units, storage, and backrooms. We lift, carry, sort, and load. You provide the dumpster or truck and we provide the hands to clear it efficiently.",
+        image: outdoorImg,
+        chips: ["Unit and storage cleanouts", "Lift and load", "You provide disposal"],
+      },
+      {
+        id: "construction",
+        title: "Construction site cleanup",
+        subtitle: "Post-con cleanup, debris bagging, site sweep outs",
+        desc:
+          "Cleanup crews that help you close out jobs faster. We handle debris pickup, bagging, sweep outs, moving materials, and end-of-day site reset so your team can stay focused on skilled work.",
+        image: propertyImg,
+        chips: ["Post-job cleanup", "Material moves", "Short notice crews"],
+      },
+      {
+        id: "other",
+        title: "Something else?",
+        subtitle: "Describe the job and we’ll staff it",
+        desc:
+          "If you need extra hands on-site and the task is clear, tell us what you need, where it is, and when. We will match and dispatch workers in your area with updates from booking to arrival.",
+        image: somethingImg,
+        chips: ["One-time or recurring", "Fast dispatch", "Clear communication"],
+      },
+    ],
+    []
+  );
 
   const iconMap = {
-    moving: FiTruck,
-    cleanout: FiTrash2,
-    outdoor: FiSun,
-    property: FiHome,
+    logistics: FiTruck,
+    warehouse: FiPackage,
+    construction: FiTool,
+    junk: FiTrash2,
     events: FiCalendar,
     other: FiHelpCircle,
   };
 
   const [active, setActive] = React.useState(options[0]);
   const previewRef = React.useRef(null);
+
+  // ✅ Preload images once to eliminate white flicker on swaps
+  React.useEffect(() => {
+    options.forEach(({ image }) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = image;
+    });
+  }, [options]);
 
   return (
     // Full top padding (as before) + half bottom padding to prevent double spacing into the next section
@@ -434,7 +447,7 @@ function TaskCategories() {
             How can we help?
           </h2>
           <p className="mt-4 text-slate-700 text-[clamp(1rem,1.2vw,1.25rem)]">
-            Pick a job type — we’ll send workers that match it.
+            Pick a work type and we will staff a crew that fits it.
           </p>
         </header>
 
@@ -443,16 +456,30 @@ function TaskCategories() {
             ref={previewRef}
             className="flex-1 rounded-3xl border border-slate-200/60 bg-slate-50/50 overflow-hidden flex flex-col shadow-[0_18px_60px_rgba(15,23,42,0.06)]"
           >
-            <div className="relative h-56 sm:h-64 lg:h-[420px] xl:h-[480px] 2xl:h-[540px]">
-              <img
-                src={active.image}
-                alt={active.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-                fetchPriority="low"
-              />
+            {/* ✅ Smooth crossfade + non-white base paint to prevent flashing */}
+            <div className="relative h-56 sm:h-64 lg:h-[420px] xl:h-[480px] 2xl:h-[540px] bg-slate-200">
+              <div className="absolute inset-0 bg-slate-200" aria-hidden="true" />
+
+              <AnimatePresence initial={false} mode="sync">
+                <motion.img
+                  key={active.id}
+                  src={active.image}
+                  alt={active.title}
+                  className="absolute inset-0 w-full h-full object-cover transform-gpu"
+                  initial={{ opacity: 0, scale: 1.01 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.0 }}
+                  transition={{ duration: 0.28, ease: "easeOut" }}
+                  decoding="async"
+                  draggable={false}
+                  fetchPriority="high"
+                  loading="eager"
+                  style={{ willChange: "opacity, transform" }}
+                />
+              </AnimatePresence>
+
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent pointer-events-none" />
+
               {active.badge ? (
                 <span className="absolute top-5 left-5 inline-flex items-center rounded-full bg-white/90 text-slate-900 text-xs font-semibold px-3 py-1">
                   {active.badge}
@@ -462,9 +489,7 @@ function TaskCategories() {
 
             <div className="p-6 sm:p-7 lg:p-8 space-y-5">
               <div>
-                <h3 className="text-slate-900 font-bold text-[clamp(1.15rem,1.4vw,1.8rem)]">
-                  {active.title}
-                </h3>
+                <h3 className="text-slate-900 font-bold text-[clamp(1.15rem,1.4vw,1.8rem)]">{active.title}</h3>
                 <p className="mt-3 text-slate-600 leading-relaxed text-[clamp(0.98rem,1.1vw,1.2rem)]">
                   {active.desc}
                 </p>
@@ -482,11 +507,11 @@ function TaskCategories() {
               </div>
 
               <PrimaryButton href={BOOKING_URL} className="w-full sm:w-auto">
-                Book <span aria-hidden="true">→</span>
+                Book
               </PrimaryButton>
 
               <p className="text-xs text-slate-500 pt-1">
-                Labor-only service, you provide any trucks, tools, or materials.
+                Labor only service. You provide any trucks, tools, dumpsters, or materials.
               </p>
             </div>
           </div>
@@ -500,13 +525,10 @@ function TaskCategories() {
                 <button
                   key={item.id}
                   type="button"
+                  style={{ WebkitTapHighlightColor: "transparent" }} // ✅ removes mobile tap flash
                   onClick={() => {
                     setActive(item);
-                    if (
-                      typeof window !== "undefined" &&
-                      window.innerWidth < 1024 &&
-                      previewRef.current
-                    ) {
+                    if (typeof window !== "undefined" && window.innerWidth < 1024 && previewRef.current) {
                       previewRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
                     }
                   }}
@@ -535,15 +557,11 @@ function TaskCategories() {
 
                   <div className="flex-1 text-left">
                     <p
-                      className={`font-bold ${
-                        isActive ? "text-slate-900" : "text-slate-800"
-                      } text-[clamp(0.95rem,1vw,1.2rem)]`}
+                      className={`font-bold ${isActive ? "text-slate-900" : "text-slate-800"} text-[clamp(0.95rem,1vw,1.2rem)]`}
                     >
                       {item.title}
                     </p>
-                    <p className="mt-1 text-slate-500 text-[clamp(0.8rem,0.9vw,1rem)]">
-                      {item.subtitle}
-                    </p>
+                    <p className="mt-1 text-slate-500 text-[clamp(0.8rem,0.9vw,1rem)]">{item.subtitle}</p>
                   </div>
 
                   <span
@@ -639,12 +657,8 @@ function HowItWorksChat() {
                   </div>
 
                   <div className="flex-1">
-                    <p className="text-[0.75rem] uppercase tracking-wide text-slate-400">
-                      Step {step.id}
-                    </p>
-                    <h3 className="mt-1 font-bold text-slate-900 text-[clamp(1rem,1vw,1.25rem)]">
-                      {step.title}
-                    </h3>
+                    <p className="text-[0.75rem] uppercase tracking-wide text-slate-400">Step {step.id}</p>
+                    <h3 className="mt-1 font-bold text-slate-900 text-[clamp(1rem,1vw,1.25rem)]">{step.title}</h3>
                     <p className="mt-1 text-slate-600 leading-relaxed text-[clamp(0.95rem,0.95vw,1.1rem)]">
                       {step.desc}
                     </p>
@@ -659,10 +673,7 @@ function HowItWorksChat() {
             className="w-full max-w-[520px] mx-auto lg:mx-0 lg:w-[min(42vw,600px)] lg:h-[var(--steps-h)] shrink-0"
             style={{ "--steps-h": stepsH }}
           >
-            <div
-              ref={artRef}
-              className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:h-full"
-            >
+            <div ref={artRef} className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:h-full">
               {/* Top-left card */}
               <motion.div
                 style={{ y: yA }}
@@ -714,9 +725,7 @@ function MessageBubble({ from, text }) {
       <div
         className={[
           "max-w-[86%] rounded-2xl px-4 py-3 text-sm leading-relaxed",
-          isYou
-            ? "bg-slate-900 text-white shadow-sm"
-            : "bg-white border border-slate-200/60 text-slate-800",
+          isYou ? "bg-slate-900 text-white shadow-sm" : "bg-white border border-slate-200/60 text-slate-800",
         ].join(" ")}
       >
         <p>{text}</p>
@@ -783,9 +792,7 @@ function TrustSectionRail() {
                 >
                   <div className="flex flex-wrap items-center gap-2 mb-4">
                     <span className="text-amber-400 text-base">★★★★★</span>
-                    <span className="text-xs text-slate-400">
-                      {REVIEWS[active].author} on Google
-                    </span>
+                    <span className="text-xs text-slate-400">{REVIEWS[active].author} on Google</span>
                   </div>
 
                   <h3 className="font-bold text-slate-900 text-[clamp(1.02rem,1.1vw,1.35rem)]">
@@ -830,8 +837,7 @@ function WhyUs() {
             Why <span className="text-rose-600">Us</span>
           </h2>
           <p className="mt-4 text-slate-700 text-[clamp(1rem,1.2vw,1.25rem)]">
-            We combine a nationwide worker network with modern automation to fill jobs fast, handle edge cases, and keep
-            everything organized from booking to completion.
+            We use AI to match vetted workers fast and keep you updated from booking to completion.
           </p>
         </header>
 
@@ -866,7 +872,7 @@ function WhyUs() {
 
                   {/* Hide on phone, show on sm+ */}
                   <span className="hidden sm:inline-flex rounded-full bg-white/90 backdrop-blur border border-slate-200/70 px-3.5 py-1.5 text-xs text-slate-700 shadow-sm">
-                    Fastest fills
+                    Fast fills
                   </span>
                 </div>
               </div>
@@ -885,30 +891,30 @@ function WhyUs() {
 
                 <div className="space-y-5">
                   <div className="border-l-2 border-slate-200 pl-4">
-                    <p className="font-semibold text-slate-900">Fast fills, better placements</p>
+                    <p className="font-semibold text-slate-900">Faster fills, better matches</p>
                     <p className="mt-1 text-slate-600 leading-relaxed">
-                      AI matching focuses on timing and job fit so you get the right crew everytime.
+                      AI matches workers by location, job type, and timing so you get the right crew.
                     </p>
                   </div>
 
                   <div className="border-l-2 border-slate-200 pl-4">
-                    <p className="font-semibold text-slate-900">No-show handling & rapid backfill</p>
+                    <p className="font-semibold text-slate-900">No-show backup</p>
                     <p className="mt-1 text-slate-600 leading-relaxed">
-                      Automated reminders reduce misses. If anything happens, we can rush out replacements within minutes.
+                      Automatic reminders reduce no-shows. If someone drops, we can send a replacement fast.
                     </p>
                   </div>
 
                   <div className="border-l-2 border-slate-200 pl-4">
-                    <p className="font-semibold text-slate-900">Operations built-in</p>
+                    <p className="font-semibold text-slate-900">Everything stays organized</p>
                     <p className="mt-1 text-slate-600 leading-relaxed">
-                      AI concierge booking, schedules, and invoice tracking — built for repeat business.
+                      Booking, schedules, and invoices live in one place so repeat jobs are easy.
                     </p>
                   </div>
 
                   <div className="border-l-2 border-slate-200 pl-4">
-                    <p className="font-semibold text-slate-900">24/7 support & smooth completion</p>
+                    <p className="font-semibold text-slate-900">Support anytime</p>
                     <p className="mt-1 text-slate-600 leading-relaxed">
-                      Support anytime, we keep the job on track from arrival to completion.
+                      24/7 help plus clear updates from booking to arrival to completion.
                     </p>
                   </div>
                 </div>
@@ -965,7 +971,7 @@ function SiteFooter() {
     <footer className={`bg-slate-50 border-t border-slate-200 ${RHYTHM.footer}`}>
       <Container className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
         <p className="text-xs text-slate-500">
-          © {new Date().getFullYear()} Great American Labor  ·{" "}
+          © {new Date().getFullYear()} Great American Labor ·{" "}
           <a className="hover:text-slate-900 transition" href={`tel:${PHONE_TEL}`}>
             {PHONE_DISPLAY}
           </a>
